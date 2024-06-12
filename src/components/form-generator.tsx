@@ -42,8 +42,6 @@ export const FormGenerator = () => {
     if (state.message === "Success") {
       setOpen(false);
     }
-
-    console.log(state.data);
   }, [state.message]);
 
   const onFormCreate = () => {

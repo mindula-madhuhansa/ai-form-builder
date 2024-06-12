@@ -21,7 +21,6 @@ const SignOut = () => {
 
 export const Header = async () => {
   const session = await auth();
-  console.log(session);
 
   return (
     <header className="border bottom-1">
