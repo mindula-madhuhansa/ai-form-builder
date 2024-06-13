@@ -82,7 +82,7 @@ export const Form = (props: Props) => {
       });
 
       if (response.status === 200) {
-        router.push("/form/submit-success");
+        router.push(`/forms/${props.form.id}/success`);
       } else {
         console.error("An error occurred. Please try again.");
         alert("An error occurred. Please try again.");
