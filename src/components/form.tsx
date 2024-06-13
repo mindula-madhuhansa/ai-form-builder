@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 import {
@@ -7,6 +8,7 @@ import {
   QuestionSelectModel,
   FieldOptionSelectModel,
 } from "@/types/form-types";
+import { publishForm } from "@/actions/mutateForm";
 
 import {
   Form as ShadcnForm,
@@ -17,6 +19,7 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/form-field";
+import { PublishSuccess } from "@/components/publish-success";
 
 type Props = {
   form: Form;
@@ -34,9 +37,19 @@ interface Form extends FormSelectModel {
 export const Form = (props: Props) => {
   const form = useForm();
   const { editMode } = props;
+  const [successDialogOpen, setSuccessDialogOpen] = useState(false);
 
-  const handleSubmit = (data: any) => {
+  const handleDialogChange = (open: boolean) => {
+    setSuccessDialogOpen(open);
+  };
+
+  const onSubmit = async (data: any) => {
     console.log(data);
+
+    if (editMode) {
+      await publishForm(props.form.id);
+      setSuccessDialogOpen(true);
+    }
   };
 
   return (
@@ -46,11 +59,11 @@ export const Form = (props: Props) => {
 
       <ShadcnForm {...form}>
         <form
-          onSubmit={handleSubmit}
+          onSubmit={form.handleSubmit(onSubmit)}
           className="grid w-full max-w-3xl items-center gap-6 my-4 text-left"
         >
           {props.form.questions.map(
-            (question: QuestionSelectModel, index: number) => (
+            (question: QuestionWithOptionsModel, index: number) => (
               <ShadcnFormField
                 control={form.control}
                 name={`question_${question.id}`}
@@ -62,7 +75,7 @@ export const Form = (props: Props) => {
                     </FormLabel>
                     <FormControl>
                       <FormField
-                        element={question as QuestionWithOptionsModel}
+                        element={question}
                         key={index}
                         value={field.value}
                         onChange={field.onChange}
@@ -76,6 +89,11 @@ export const Form = (props: Props) => {
           <Button type="submit">{editMode ? "Publish" : "Submit"}</Button>
         </form>
       </ShadcnForm>
+      <PublishSuccess
+        formId={props.form.id}
+        open={successDialogOpen}
+        onOpenChange={handleDialogChange}
+      />
     </div>
   );
 };

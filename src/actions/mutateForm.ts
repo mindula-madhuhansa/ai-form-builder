@@ -1,6 +1,6 @@
 "use server";
 
-import { InferInsertModel } from "drizzle-orm";
+import { InferInsertModel, eq } from "drizzle-orm";
 
 import { db } from "@/db";
 import { auth } from "@/lib/auth";
@@ -59,4 +59,8 @@ export async function saveForm(data: SaveFormData) {
   });
 
   return formId;
+}
+
+export async function publishForm(formId: number) {
+  await db.update(forms).set({ published: true }).where(eq(forms.id, formId));
 }
