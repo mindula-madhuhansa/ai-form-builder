@@ -42,7 +42,7 @@ export const FormGenerator = () => {
   useEffect(() => {
     if (state.message === "success") {
       setOpen(false);
-      navigate(state.data.id);
+      navigate(state.data.formId);
     }
   }, [state]);
 
