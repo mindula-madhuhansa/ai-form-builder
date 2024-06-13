@@ -22,7 +22,7 @@ export const PublishSuccess = (props: Props) => {
 
   const copyToClipboard = () => {
     navigator.clipboard
-      .writeText(`${baseUrl}/form/${props.formId}`)
+      .writeText(`${baseUrl}/forms/${props.formId}`)
       .then(() => alert("Copied to clipboard"))
       .catch((err) => alert("Failed to copy to clipboard"));
   };
@@ -48,7 +48,7 @@ export const PublishSuccess = (props: Props) => {
                 type="text"
                 placeholder="Link"
                 disabled
-                value={`${baseUrl}/form/${props.formId}`}
+                value={`${baseUrl}/forms/${props.formId}`}
                 className="w-full outline-none bg-transparent"
               />
               <Button type="button" onClick={copyToClipboard}>
