@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 
 import {
   FormSelectModel,
@@ -35,20 +36,57 @@ interface Form extends FormSelectModel {
 }
 
 export const Form = (props: Props) => {
+  const router = useRouter();
   const form = useForm();
-  const { editMode } = props;
   const [successDialogOpen, setSuccessDialogOpen] = useState(false);
+
+  const { editMode } = props;
 
   const handleDialogChange = (open: boolean) => {
     setSuccessDialogOpen(open);
   };
 
   const onSubmit = async (data: any) => {
-    console.log(data);
-
     if (editMode) {
       await publishForm(props.form.id);
       setSuccessDialogOpen(true);
+    } else {
+      let answers = [];
+      for (const [questionId, value] of Object.entries(data)) {
+        const id = parseInt(questionId.replace("question_", ""));
+        let fieldOptionsId = null;
+        let textValue = null;
+
+        if (typeof value == "string" && value.includes("answerId_")) {
+          parseInt(value.replace("answerId_", ""));
+        } else {
+          textValue = value as string;
+        }
+
+        answers.push({
+          questionId: id,
+          fieldOptionsId,
+          value: textValue,
+        });
+      }
+
+      const baseUrl =
+        process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+
+      const response = await fetch(`${baseUrl}/api/form/new`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ formId: props.form.id, answers }),
+      });
+
+      if (response.status === 200) {
+        router.push("/form/submit-success");
+      } else {
+        console.error("An error occurred. Please try again.");
+        alert("An error occurred. Please try again.");
+      }
     }
   };
 
