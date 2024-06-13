@@ -4,6 +4,8 @@ import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
+import { saveForm } from "@/actions/mutateForm";
+
 export async function generateForm(
   prevState: {
     message: string;
@@ -21,7 +23,7 @@ export async function generateForm(
   if (!parse.success) {
     console.error(parse.error);
     return {
-      message: "Failed to parse data",
+      message: "failed to parse data",
     };
   }
 
@@ -64,16 +66,24 @@ export async function generateForm(
       .replace("```", "")
       .trim();
 
+    const responseJson = JSON.parse(text);
+
+    const dbFormId = await saveForm({
+      name: responseJson.name,
+      description: responseJson.description,
+      questions: responseJson.questions,
+    });
+
     revalidatePath("/");
 
     return {
       message: "success",
-      data: text,
+      data: { formId: dbFormId },
     };
   } catch (error) {
     console.error(error);
     return {
-      message: "Failed to generate form",
+      message: "failed to generate form",
     };
   }
 }

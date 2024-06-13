@@ -5,6 +5,7 @@ import { useSession, signIn } from "next-auth/react";
 import { useFormState, useFormStatus } from "react-dom";
 
 import { generateForm } from "@/actions/generateForm";
+import { navigate } from "@/actions/navigateToForm";
 
 import {
   Dialog,
@@ -39,10 +40,11 @@ export const FormGenerator = () => {
   const session = useSession();
 
   useEffect(() => {
-    if (state.message === "Success") {
+    if (state.message === "success") {
       setOpen(false);
+      navigate(state.data.id);
     }
-  }, [state.message]);
+  }, [state]);
 
   const onFormCreate = () => {
     if (session.data?.user) {
