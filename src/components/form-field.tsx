@@ -1,9 +1,7 @@
 import { ChangeEvent } from "react";
 
-import {
-  QuestionSelectModel,
-  FieldOptionSelectModel,
-} from "@/types/form-types";
+import { QuestionSelectModel } from "@/types/form-types";
+import { FieldOptionSelectModel } from "@/types/form-types";
 
 import {
   Select,
@@ -13,8 +11,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { FormControl } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
@@ -24,7 +22,12 @@ type Props = {
     fieldOptions: Array<FieldOptionSelectModel>;
   };
   value: string;
-  onChange: (value?: string | ChangeEvent<HTMLInputElement>) => void;
+  onChange: (
+    value?:
+      | string
+      | ChangeEvent<HTMLInputElement>
+      | ChangeEvent<HTMLTextAreaElement>
+  ) => void;
 };
 
 export const FormField = ({ element, value, onChange }: Props) => {
@@ -32,15 +35,21 @@ export const FormField = ({ element, value, onChange }: Props) => {
 
   const components = {
     Input: () => <Input type="text" onChange={onChange} />,
-    Switch: () => <Switch />,
-    Textarea: () => <Textarea />,
+    Switch: () => (
+      <Switch
+        onCheckedChange={(checked: boolean) => {
+          onChange(checked ? "true" : "false");
+        }}
+      />
+    ),
+    Textarea: () => <Textarea onChange={onChange} />,
     Select: () => (
       <Select onValueChange={onChange}>
         <SelectTrigger>
           <SelectValue>Select an option</SelectValue>
         </SelectTrigger>
         <SelectContent>
-          {element.fieldOptions.map((option) => (
+          {element.fieldOptions.map((option, index) => (
             <SelectItem
               key={`${option.text} ${option.value}`}
               value={`answerId_${option.id}`}
@@ -53,25 +62,20 @@ export const FormField = ({ element, value, onChange }: Props) => {
     ),
     RadioGroup: () => (
       <RadioGroup onValueChange={onChange}>
-        {element.fieldOptions.map((option) => (
+        {element.fieldOptions.map((option, index) => (
           <div
             key={`${option.text} ${option.value}`}
             className="flex items-center space-x-2"
           >
             <FormControl>
               <RadioGroupItem
-                id={option.value?.toString() || `answerId_${option.id}`}
                 value={`answerId_${option.id}`}
+                id={option?.value?.toString() || `answerId_${option.id}`}
               >
                 {option.text}
               </RadioGroupItem>
             </FormControl>
-            <Label
-              htmlFor={option.value?.toString() || `answerId_${option.id}`}
-              className="text-base"
-            >
-              {option.text}
-            </Label>
+            <Label className="text-base">{option.text}</Label>
           </div>
         ))}
       </RadioGroup>

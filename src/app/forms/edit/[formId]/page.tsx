@@ -6,7 +6,7 @@ import { forms } from "@/db/schema";
 
 import { Form } from "@/components/form";
 
-const Page = async ({
+const page = async ({
   params,
 }: {
   params: {
@@ -21,7 +21,6 @@ const Page = async ({
 
   const session = await auth();
   const userId = session?.user?.id;
-
   const form = await db.query.forms.findFirst({
     where: eq(forms.id, parseInt(formId)),
     with: {
@@ -34,18 +33,13 @@ const Page = async ({
   });
 
   if (userId !== form?.userId) {
-    return <div>You are not authorized to view this form</div>;
+    return <div>You are not authorized to view this page</div>;
   }
 
   if (!form) {
     return <div>Form not found</div>;
   }
 
-  return (
-    <div>
-      <Form form={form} editMode={true} />
-    </div>
-  );
+  return <Form form={form} editMode={true} />;
 };
-
-export default Page;
+export default page;

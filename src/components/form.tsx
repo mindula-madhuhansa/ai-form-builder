@@ -12,11 +12,11 @@ import {
 import { publishForm } from "@/actions/mutateForm";
 
 import {
-  Form as ShadcnForm,
-  FormField as ShadcnFormField,
-  FormControl,
+  Form as FormComponent,
+  FormField as ShadcdnFormField,
   FormItem,
   FormLabel,
+  FormControl,
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/form-field";
@@ -36,11 +36,10 @@ interface Form extends FormSelectModel {
 }
 
 export const Form = (props: Props) => {
-  const router = useRouter();
   const form = useForm();
-  const [successDialogOpen, setSuccessDialogOpen] = useState(false);
-
+  const router = useRouter();
   const { editMode } = props;
+  const [successDialogOpen, setSuccessDialogOpen] = useState(false);
 
   const handleDialogChange = (open: boolean) => {
     setSuccessDialogOpen(open);
@@ -58,7 +57,7 @@ export const Form = (props: Props) => {
         let textValue = null;
 
         if (typeof value == "string" && value.includes("answerId_")) {
-          parseInt(value.replace("answerId_", ""));
+          fieldOptionsId = parseInt(value.replace("answerId_", ""));
         } else {
           textValue = value as string;
         }
@@ -80,12 +79,11 @@ export const Form = (props: Props) => {
         },
         body: JSON.stringify({ formId: props.form.id, answers }),
       });
-
       if (response.status === 200) {
         router.push(`/forms/${props.form.id}/success`);
       } else {
-        console.error("An error occurred. Please try again.");
-        alert("An error occurred. Please try again.");
+        console.error("Error submitting form");
+        alert("Error submitting form. Please try again later");
       }
     }
   };
@@ -94,39 +92,40 @@ export const Form = (props: Props) => {
     <div className="text-center">
       <h1 className="text-lg font-bold py-3">{props.form.name}</h1>
       <h3 className="text-md">{props.form.description}</h3>
-
-      <ShadcnForm {...form}>
+      <FormComponent {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className="grid w-full max-w-3xl items-center gap-6 my-4 text-left"
         >
           {props.form.questions.map(
-            (question: QuestionWithOptionsModel, index: number) => (
-              <ShadcnFormField
-                control={form.control}
-                name={`question_${question.id}`}
-                key={`${question.text}_${index}`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-base mt-3">
-                      {index + 1}. {question.text}
-                    </FormLabel>
-                    <FormControl>
-                      <FormField
-                        element={question}
-                        key={index}
-                        value={field.value}
-                        onChange={field.onChange}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            )
+            (question: QuestionWithOptionsModel, index: number) => {
+              return (
+                <ShadcdnFormField
+                  control={form.control}
+                  name={`question_${question.id}`}
+                  key={`${question.text}_${index}`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-base mt-3">
+                        {index + 1}. {question.text}
+                      </FormLabel>
+                      <FormControl>
+                        <FormField
+                          element={question}
+                          key={index}
+                          value={field.value}
+                          onChange={field.onChange}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              );
+            }
           )}
           <Button type="submit">{editMode ? "Publish" : "Submit"}</Button>
         </form>
-      </ShadcnForm>
+      </FormComponent>
       <PublishSuccess
         formId={props.form.id}
         open={successDialogOpen}

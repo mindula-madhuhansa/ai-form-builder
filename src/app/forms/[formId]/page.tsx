@@ -5,7 +5,7 @@ import { forms } from "@/db/schema";
 
 import { Form } from "@/components/form";
 
-const Page = async ({
+const page = async ({
   params,
 }: {
   params: {
@@ -33,11 +33,6 @@ const Page = async ({
     return <div>Form not found</div>;
   }
 
-  return (
-    <div>
-      <Form form={form} editMode={false} />
-    </div>
-  );
+  return <Form form={form} />;
 };
-
-export default Page;
+export default page;
