@@ -10,7 +10,8 @@ const Page = () => {
         <CircleCheckBigIcon className="size-4" />
         <AlertTitle>Success</AlertTitle>
         <AlertDescription>
-          Your answers were recorded successfully. Thank you for your time.{" "}
+          Your payment was successful. You will receive an email with your
+          invoice shortly.{" "}
           <Link href="/view-forms" className="underline">
             Back to Dashboard
           </Link>

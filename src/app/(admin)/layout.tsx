@@ -3,6 +3,7 @@ import { SessionProvider } from "next-auth/react";
 import { SidebarNavItems } from "@/types/nav-types";
 
 import { Header } from "@/components/header";
+import { UpgradeBtn } from "@/components/upgrade-btn";
 import { FormGenerator } from "@/components/form-generator";
 import { DashboardNavbar } from "@/components/dashboard-navbar";
 
@@ -45,6 +46,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
       <div className="container grid gap-12 lg:grid-cols-[200px_1fr] flex-1">
         <aside className="hidden w-[200px] flex-col lg:flex pr-2 border-r justify-between">
           <DashboardNavbar items={dashboardConfig.sidebarNav} />
+          <UpgradeBtn />
         </aside>
         <main className="flex w-full flex-1 flex-col overflow-hidden">
           <header className="flex items-center">
