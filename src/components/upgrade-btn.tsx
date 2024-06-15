@@ -1,6 +1,7 @@
 import { auth } from "@/lib/auth";
 import { MAX_FREE_FORMS } from "@/lib/utils";
 import { getUserForms } from "@/actions/getUserForms";
+import { getUserSubscription } from "@/actions/userSubscription";
 
 import { Progress } from "@/components/ui/progress";
 import { SubscribeBtn } from "@/components/subscribe-btn";
@@ -13,6 +14,12 @@ export const UpgradeBtn = async () => {
 
   const session = await auth();
   const userId = session?.user?.id;
+
+  if (!userId) return null;
+
+  const subscription = await getUserSubscription({ userId });
+
+  if (subscription) return null;
 
   return (
     <div className="p-4 mb-4 text-left text-xs">

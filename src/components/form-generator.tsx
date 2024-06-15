@@ -1,5 +1,6 @@
 "use client";
 
+import { PlusIcon } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useSession, signIn } from "next-auth/react";
 import { useFormState, useFormStatus } from "react-dom";
@@ -56,7 +57,10 @@ export const FormGenerator = () => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <Button onClick={onFormCreate}>Create Form</Button>
+      <Button onClick={onFormCreate}>
+        <PlusIcon className="size-4 mr-2" />
+        Create Form
+      </Button>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Create New Form</DialogTitle>
